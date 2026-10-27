@@ -4,7 +4,7 @@
   "description": "FixMyCity - Community Grievance & Civic Resolution Platform",
   "private": true,
   "scripts": {
-    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install",
+    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install --include=dev",
     "start": "node backend/index.js",
     "dev:backend": "npm --prefix backend start",
     "dev:frontend": "npm --prefix frontend run dev",
