@@ -1,0 +1,16 @@
+{
+  "name": "fixmycity-fullstack",
+  "version": "1.0.0",
+  "description": "FixMyCity - Community Grievance & Civic Resolution Platform",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix backend start",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "seed": "npm --prefix backend run seed",
+    "start": "npm --prefix backend start"
+  },
+  "keywords": ["mern", "civic", "grievance", "tracker", "fullstack"],
+  "author": "Fullstack Engineering Student",
+  "license": "ISC"
+}
