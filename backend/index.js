@@ -44,14 +44,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// API Routes
-app.use("/citizens", citizenRoutes);
-app.use("/issues", issueRoutes);
-app.use("/watchlist", watchlistRoutes);
-app.use("/grievances", grievanceRoutes);
+// API Routes — all under /api so they don't clash with React frontend routes
+app.use("/api/citizens", citizenRoutes);
+app.use("/api/issues", issueRoutes);
+app.use("/api/watchlist", watchlistRoutes);
+app.use("/api/grievances", grievanceRoutes);
 
 // Health check endpoint
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
     service: "FixMyCity Civic Grievance API",
@@ -70,16 +70,10 @@ const frontendDistPath = path.join(__dirname, "../frontend/dist");
 
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
+  // For any non-/api route, serve index.html so React Router handles it
   app.get("*", (req, res, next) => {
-    // If request starts with API routes, pass to 404 handler
-    if (
-      req.originalUrl.startsWith("/citizens") ||
-      req.originalUrl.startsWith("/issues") ||
-      req.originalUrl.startsWith("/watchlist") ||
-      req.originalUrl.startsWith("/grievances") ||
-      req.originalUrl.startsWith("/health")
-    ) {
-      return next();
+    if (req.originalUrl.startsWith("/api")) {
+      return next(); // Let Express 404 handler respond
     }
     res.sendFile(path.join(frontendDistPath, "index.html"));
   });
@@ -89,10 +83,10 @@ if (fs.existsSync(frontendDistPath)) {
     res.json({
       message: "🏛️ Welcome to FixMyCity API — Citizen Grievance & Civic Resolution Platform",
       endpoints: {
-        auth: "/citizens/register, /citizens/login, /citizens/me, /citizens/logout",
-        issues: "GET /issues (search, filter), POST /issues, GET /issues/:id, POST /issues/:id/upvote",
-        watchlist: "GET /watchlist, POST /watchlist/:issueId, DELETE /watchlist/:issueId",
-        grievances: "POST /grievances/file, GET /grievances, GET /grievances/:id",
+        auth: "/api/citizens/register, /api/citizens/login, /api/citizens/me, /api/citizens/logout",
+        issues: "GET /api/issues, POST /api/issues, GET /api/issues/:id, POST /api/issues/:id/upvote",
+        watchlist: "GET /api/watchlist, POST /api/watchlist/:issueId, DELETE /api/watchlist/:issueId",
+        grievances: "POST /api/grievances/file, GET /api/grievances, GET /api/grievances/:id",
       },
     });
   });

@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// In production (Render), frontend is served by the same Express server,
-// so API calls must be relative (empty base URL = same origin).
-// In local dev, Vite runs on :5173 and backend on :5000, so we use localhost.
+// In production (Render), frontend is served by the same Express server.
+// All API calls are relative to /api (same origin, no CORS issues).
+// In local dev, Vite runs on :5173 and backend on :5000.
 const API_BASE_URL = import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:5000" : "");
+  (import.meta.env.DEV ? "http://localhost:5000/api" : "/api");
 
 const api = axios.create({
   baseURL: API_BASE_URL,
