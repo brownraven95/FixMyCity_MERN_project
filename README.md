@@ -4,19 +4,6 @@
 
 ---
 
-## 📋 Project Submission Overview
-
-| Field | Details |
-|---|---|
-| **Project Name** | FixMyCity — Civic Grievance & Municipal Resolution Platform |
-| **Domain** | Civic Tech / Community Infrastructure & Public Administration |
-| **Architecture** | Full-Stack MERN (MongoDB, Express.js, React 18, Node.js, Tailwind CSS) |
-| **Authentication** | JWT stored in HttpOnly SameSite Cookies + Bearer Header Fallback |
-| **Persistence** | MongoDB with Mongoose ODM (includes zero-config in-memory fallback) |
-| **Submission Form** | [Official End-Term Project Form](https://forms.gle/sBy4sfqyiRG2Zpom9) |
-
----
-
 ## 🎯 1. Problem Statement
 
 In metropolitan and suburban neighborhoods, civic infrastructure breakdowns—such as dangerous asphalt craters, leaking clean water mains, overflowing waste bins, and broken streetlights—frequently go unresolved because:
@@ -65,7 +52,7 @@ flowchart TD
 - Citizen registration with validation (unique email, minimum 6-character password, 10-digit phone).
 - Passwords stored strictly as **bcrypt hashes** (salt rounds = 10).
 - Stateless JWT issuance stored inside **HttpOnly cookies** (XSS protection).
-- Protected `/citizens/me` profile route with activity metrics and **Change Password** bonus functionality.
+- Protected `/citizens/me` profile route with activity metrics and password change functionality.
 
 ### Workflow 2: Dynamic Civic Catalog & Real-Time Discovery
 - Browse issues with dynamic query search across title, description, or landmarks.
@@ -87,10 +74,10 @@ flowchart TD
 ### Workflow 5: Official Grievance Escalation & Historical Snapshotting
 - Converts an open civic problem into an official SLA-bound administrative ticket.
 - **Client & Server-Side Form Validation:** Strict checks for non-empty fields, valid 10-digit phone numbers, and 6-digit postal PIN codes.
-- **Purchase-Time / Filing-Time Snapshotting:** Freezes issue title, category, priority, and photo so future edits to the issue do not alter the historical grievance record.
+- **Snapshotting:** Freezes issue title, category, priority, and photo so future edits to the issue do not alter the historical grievance record.
 - **Auto-Department Assignment:** Routes complaints to the responsible municipal department (e.g. Roads ➔ PWD, Pipes ➔ Water Board).
 - **Unique Docket ID Generation:** Cryptographically generated tracking code (e.g., `FMC-2026-8D7AE5`).
-- **Interactive Resolution Lifecycle:** Visual progression tracker with live simulator for demonstration:
+- **Interactive Resolution Lifecycle:** Visual progression tracker with live controls:
   `SUBMITTED` ➔ `INSPECTION_SCHEDULED` ➔ `WORK_IN_PROGRESS` ➔ `RESOLVED`.
 
 ---
@@ -104,11 +91,11 @@ flowchart TD
 | **Backend** | Node.js, Express.js | Event-driven I/O, RESTful MVC architecture, modular routing and middleware chaining |
 | **Database** | MongoDB, Mongoose ODM | Flexible schema design, relational references via ObjectId, atomic updates |
 | **Authentication** | JWT, bcryptjs, cookie-parser | Industry-standard password hashing, stateless sessions protected against client-side script inspection |
-| **Development DB** | MongoMemoryServer Fallback | Automatically activates if a local MongoDB service is absent, guaranteeing zero-configuration evaluator testing |
+| **Development DB** | MongoMemoryServer Fallback | Automatically activates if a local MongoDB service is absent, guaranteeing zero-configuration testing |
 
 ---
 
-## 🛡️ 6. Security & Engineering Decisions
+## 🛡️ 6. Security & Engineering Highlights
 
 1. **HttpOnly Cookie Authentication:** Prevents malicious JavaScript from accessing session tokens (mitigating Cross-Site Scripting / XSS).
 2. **Password Masking:** Mongoose schema overrides `toJSON` to ensure raw password hashes are never returned in any API response.
@@ -185,7 +172,7 @@ MERN_endProject/
 │
 ├── .gitignore                     # Ignores node_modules, .env, and dist
 ├── package.json                   # Root orchestrator scripts
-└── README.md                      # Comprehensive submission documentation
+└── README.md                      # Comprehensive documentation
 ```
 
 ---
@@ -221,21 +208,21 @@ To verify production readiness:
 cd frontend
 npm run build
 ```
-*(Builds in ~3.3 seconds into `frontend/dist` with zero errors).*
+*(Builds into `frontend/dist` with zero errors).*
 
 ---
 
 ## 🔑 9. Pre-Configured Demo Account
 
-For evaluator convenience, you can test all protected workflows immediately:
+For testing all protected workflows immediately:
 - **Email:** `demo@fixmycity.org`
 - **Password:** `demo12345`
 
-> **Tip:** On the Sign In page, click the **"Quick Demo Autofill"** button to automatically populate these credentials with one click!
+> On the Sign In page, click the **"Quick Demo Autofill"** button to automatically populate these credentials with one click.
 
 ---
 
-## 🧪 10. API Specification & Testing Plan
+## 🧪 10. API Specification
 
 | Method | Endpoint | Auth | Purpose | Sample Request / Response |
 |---|---|:---:|---|---|
@@ -260,39 +247,7 @@ For evaluator convenience, you can test all protected workflows immediately:
 
 ---
 
-## 📹 11. Demo Video Script & Walkthrough (3–5 Minutes)
-
-When recording your demo video, follow this recommended sequence:
-
-1. **Introduction (30s):**
-   - Introduce yourself and the project name: *FixMyCity*.
-   - State the problem: *Cities suffer from broken infrastructure that gets lost in phone complaints; citizens need transparency and community-driven urgency.*
-2. **Issue Catalog & Discovery (60s):**
-   - Open `/issues`. Demonstrate dynamic search (e.g. typing "pothole" or "pipeline").
-   - Filter by category (*Roads & Potholes*, *Water Supply*) and sort by *Most Upvoted*.
-   - Point out the active loading, empty, and category badge treatments.
-3. **Citizen Sign In & Community Upvotes (45s):**
-   - Click "Sign In", click "Quick Demo Autofill", and authenticate.
-   - Click the **Upvote** button on an issue; observe the count update instantly in real time without a page reload.
-   - Click the **Bookmark** button; show how the Navbar badge automatically displays `Watchlist (1)`.
-4. **Neighborhood Watchlist (30s):**
-   - Navigate to `/watchlist`. Show the populated saved issues retrieved via MongoDB relationships.
-   - Demonstrate removing an item and the empty state with the "Browse Civic Issues" call to action.
-5. **Official Grievance Escalation & Docket Tracking (75s):**
-   - Open an urgent issue and click **"File Official Grievance Ticket"**.
-   - Show the immutable Issue Snapshot card on the right.
-   - Fill in complainant verification (demonstrating validation for 10-digit phone and 6-digit PIN).
-   - Submit the grievance. Point out the newly generated tracking number (e.g. `FMC-2026-XXXXX`).
-   - Open `/my-grievances` and click into the ticket details.
-   - Demonstrate the **4-stage visual resolution timeline** (`SUBMITTED` ➔ `INSPECTION` ➔ `WORK_IN_PROGRESS` ➔ `RESOLVED`) using the evaluation controls to show real-time database updates.
-6. **Conclusion (15s):**
-   - Summarize the software architecture, clean git history, and full-stack integration.
-
----
-
-## 🌐 12. Deployment Guide
-
-To deploy this project online for public evaluator access:
+## 🌐 11. Deployment Guide
 
 ### Deploying Frontend (Vercel / Netlify)
 1. Push your repository to GitHub.
@@ -307,19 +262,4 @@ To deploy this project online for public evaluator access:
    - `PORT=5000`
    - `CLIENT_URL=https://your-frontend-domain.vercel.app`
    - `JWT_SECRET=production_super_secret_key`
-   - `MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/fixmycity` *(or leave unset to use the memory fallback)*.
-
----
-
-## 📝 13. Official Submission Checklist
-
-Before submitting to the [Google Form](https://forms.gle/sBy4sfqyiRG2Zpom9):
-
-- [x] **Project Name:** FixMyCity — Civic Grievance & Municipal Resolution Platform
-- [x] **Problem Statement & Target Users:** Fully documented in Section 1 & 2
-- [x] **Source Code:** Complete MERN codebase in Git repository
-- [x] **Git History:** 7+ logical, structured commits representing real development milestones
-- [x] **No Secrets Exposed:** `.env` safely ignored; `.env.example` provided
-- [x] **Working Workflows:** Authentication, Issue Catalog, Watchlist, Global Upvoting, Grievance Escalation & Timeline
-- [x] **Reliability & UX:** Handled loading, empty, success, and error states across all pages
-- [x] **README Documentation:** Architecture diagrams, API tables, and setup guide included
+   - `MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/fixmycity` *(or leave unset to use the automatic memory fallback)*.
