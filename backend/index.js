@@ -59,20 +59,46 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Root welcome
-app.get("/", (req, res) => {
-  res.json({
-    message: "🏛️ Welcome to FixMyCity API — Citizen Grievance & Civic Resolution Platform",
-    endpoints: {
-      auth: "/citizens/register, /citizens/login, /citizens/me, /citizens/logout",
-      issues: "GET /issues (search, filter), POST /issues, GET /issues/:id, POST /issues/:id/upvote",
-      watchlist: "GET /watchlist, POST /watchlist/:issueId, DELETE /watchlist/:issueId",
-      grievances: "POST /grievances/file, GET /grievances, GET /grievances/:id",
-    },
-  });
-});
+// In production, serve frontend build if it exists
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
-// 404 Route Handler
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendDistPath = path.join(__dirname, "../frontend/dist");
+
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get("*", (req, res, next) => {
+    // If request starts with API routes, pass to 404 handler
+    if (
+      req.originalUrl.startsWith("/citizens") ||
+      req.originalUrl.startsWith("/issues") ||
+      req.originalUrl.startsWith("/watchlist") ||
+      req.originalUrl.startsWith("/grievances") ||
+      req.originalUrl.startsWith("/health")
+    ) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+} else {
+  // Root welcome in API-only mode
+  app.get("/", (req, res) => {
+    res.json({
+      message: "🏛️ Welcome to FixMyCity API — Citizen Grievance & Civic Resolution Platform",
+      endpoints: {
+        auth: "/citizens/register, /citizens/login, /citizens/me, /citizens/logout",
+        issues: "GET /issues (search, filter), POST /issues, GET /issues/:id, POST /issues/:id/upvote",
+        watchlist: "GET /watchlist, POST /watchlist/:issueId, DELETE /watchlist/:issueId",
+        grievances: "POST /grievances/file, GET /grievances, GET /grievances/:id",
+      },
+    });
+  });
+}
+
+// 404 Route Handler for unmatched API routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
