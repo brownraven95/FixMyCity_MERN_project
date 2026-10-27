@@ -263,3 +263,5 @@ For testing all protected workflows immediately:
    - `CLIENT_URL=https://your-frontend-domain.vercel.app`
    - `JWT_SECRET=production_super_secret_key`
    - `MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/fixmycity` *(or leave unset to use the automatic memory fallback)*.
+
+   DEMO VIDEO LINK: https://drive.google.com/file/d/1phvAt4vfFKRE4ZVIS5TEaJTDBDwMPNPM/view?usp=sharing
